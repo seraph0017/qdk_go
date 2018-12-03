@@ -1,0 +1,5 @@
+{
+  "tsdb_uri":"ts-uf6rci3y9d1s9429g.hitsdb.rds.aliyuncs.com:3242",
+  "mysql_uri":"qdk:ZcKrg6xdfKVlI9FY@(rm-uf6z6b865h964x5xyo.mysql.rds.aliyuncs.com:3306)/qdk_go?parseTime=true&Local",
+  "http_addr": "0.0.0.0:22241"
+}
