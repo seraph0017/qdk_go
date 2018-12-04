@@ -48,8 +48,8 @@ const (
 	`
 	JOIN_TABLE = "left join pi on keng.id = pi.keng_id"
 
-	NO_BODY_LINE = 100.00
-	RRANGE       = 50.00
+	NO_BODY_LINE = 124.00
+	RRANGE       = 20.00
 )
 
 func (k *KengService) GetAllKeng() ([]KengResult, error) {
