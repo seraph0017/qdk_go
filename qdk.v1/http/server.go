@@ -1,9 +1,10 @@
 package http
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/sirupsen/logrus"
 	"qdk/qdk.v1/middleware"
+	"qdk/qdk.v1/misc"
 	"qdk/qdk.v1/service"
 )
 
@@ -18,12 +19,15 @@ type (
 
 		PiMgr   service.PiMgr
 		KengMgr service.KengMgr
+
+		Log *logrus.Logger
 	}
 
 	Config struct {
 		TsdbUri  string
 		MysqlUri string
 		HttpAddr string
+		LogPath  string
 	}
 )
 
@@ -33,15 +37,16 @@ func (s *Server) Start() {
 
 func NewServer(cfg *Config) *Server {
 	r := gin.Default()
+	Log := misc.NewLogger(cfg.LogPath)
 
-	PiMgr, err := service.NewPiMgr(&service.PiConfig{MysqlUri: cfg.MysqlUri, TsdbUri: cfg.TsdbUri})
+	PiMgr, err := service.NewPiMgr(&service.PiConfig{MysqlUri: cfg.MysqlUri, TsdbUri: cfg.TsdbUri, Log: Log})
 	if err != nil {
-		fmt.Println("err", err)
+		Log.Error(err)
 	}
 
-	KengMgr, err := service.NewKengMgr(&service.KengConfig{MysqlUri: cfg.MysqlUri, TsdbUri: cfg.TsdbUri})
+	KengMgr, err := service.NewKengMgr(&service.KengConfig{MysqlUri: cfg.MysqlUri, TsdbUri: cfg.TsdbUri, Log: Log})
 	if err != nil {
-		fmt.Println("err", err)
+		Log.Error(err)
 	}
 
 	s := &Server{
@@ -53,6 +58,8 @@ func NewServer(cfg *Config) *Server {
 
 		PiMgr:   PiMgr,
 		KengMgr: KengMgr,
+
+		Log: Log,
 	}
 
 	pi := s.App.Group("/pi")

@@ -1,5 +1,5 @@
-hash: dd0379335664aebc08042e98e67ec88e43b5a28f0239d70feb749532b25aa155
-updated: 2018-11-27T16:06:18.221016+08:00
+hash: 29156c1c9dded34640d673e20474e3f9e3a65577148a5daf6a80aee0afd119b4
+updated: 2018-12-11T17:25:23.228595+08:00
 imports:
 - name: github.com/bluebreezecf/opentsdb-goclient
   version: 539764bd9a9cae6632dea52b5a587451728a3983
@@ -35,13 +35,21 @@ imports:
   - json/scanner
   - json/token
 - name: github.com/jinzhu/gorm
-  version: 6ed508ec6a4ecb3531899a69cbc746ccf65a4166
+  version: 472c70caa40267cb89fd8facb07fe6454b578626
   subpackages:
   - dialects/mysql
 - name: github.com/jinzhu/inflection
   version: 1c35d901db3da928c72a72d8458480cc9ade058f
 - name: github.com/json-iterator/go
   version: 1624edc4454b8682399def8740d46db5e4362ba4
+- name: github.com/konsorten/go-windows-terminal-sequences
+  version: 5c8c8bd35d3832f5d134ae1e1e375b69a4d25242
+- name: github.com/lestrrat-go/file-rotatelogs
+  version: 3b4f34a036f374c18d604e1b8006d9fbb9593c06
+  subpackages:
+  - internal/option
+- name: github.com/lestrrat-go/strftime
+  version: 59966ecb6d84ec0010de6a5b8deae0299ce5b549
 - name: github.com/magiconair/properties
   version: c2353362d570a7bfa228149c62842019201cfb71
 - name: github.com/mattn/go-isatty
@@ -54,6 +62,12 @@ imports:
   version: 94122c33edd36123c84d5368cfb2b69df93a0ec8
 - name: github.com/pelletier/go-toml
   version: c2dbbc24a97911339e01bda0b8cabdbd8f13b602
+- name: github.com/pkg/errors
+  version: 645ef00459ed84a119197bfb8d8205042c6df63d
+- name: github.com/rifflock/lfshook
+  version: b9218ef580f59a2e72dad1aa33d660150445d05a
+- name: github.com/sirupsen/logrus
+  version: bcd833dfe83d3cebad139e4a29ed79cb2318bf95
 - name: github.com/spf13/afero
   version: 787d034dfe70e44075ccc060d346146ef53270ad
   subpackages:
@@ -67,22 +81,27 @@ imports:
 - name: github.com/spf13/viper
   version: 2c12c60302a5a0e62ee102ca9bc996277c2f64f5
 - name: github.com/ugorji/go
-  version: f6bb70d25a8680df905b644f768bf68b201cc602
+  version: 772ced7fd4c2f6322c07537a9a93b68d74551fa6
   subpackages:
   - codec
 - name: github.com/urfave/cli
   version: cfb38830724cc34fedffe9a2a29fb54fa9169cd1
+- name: golang.org/x/crypto
+  version: 1875d0a70c90e57f11972aefd42276df65e895b9
+  subpackages:
+  - ssh/terminal
 - name: golang.org/x/sys
   version: 37707fdb30a5b38865cfb95e5aab41707daec7fd
   subpackages:
   - unix
+  - windows
 - name: golang.org/x/text
   version: 4ee4af566555f5fbe026368b75596286a312663a
   subpackages:
   - transform
   - unicode/norm
 - name: google.golang.org/appengine
-  version: 4a4468ece617fc8205e99368fa2200e9d1fad421
+  version: a37df1387b4521194676d88c79230c613610d5f4
   subpackages:
   - cloudsql
 - name: gopkg.in/go-playground/validator.v8

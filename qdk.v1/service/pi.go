@@ -7,6 +7,7 @@ import (
 	"github.com/bluebreezecf/opentsdb-goclient/config"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
+	"github.com/sirupsen/logrus"
 	"qdk/qdk.v1/model"
 	"time"
 )
@@ -20,6 +21,7 @@ type (
 	PiConfig struct {
 		MysqlUri string
 		TsdbUri  string
+		Log      *logrus.Logger
 	}
 
 	PiService struct {
@@ -73,5 +75,5 @@ func NewPiMgr(cfg *PiConfig) (PiMgr, error) {
 	}
 	MysqlConn.SingularTable(true)
 	MysqlConn.LogMode(true)
-	return &PiService{Base: Base{TsdbCli: TsdbCli, Conn: MysqlConn}}, nil
+	return &PiService{Base: Base{TsdbCli: TsdbCli, Conn: MysqlConn, Log: cfg.Log}}, nil
 }

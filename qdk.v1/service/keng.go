@@ -6,6 +6,7 @@ import (
 	"github.com/bluebreezecf/opentsdb-goclient/config"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
+	"github.com/sirupsen/logrus"
 	"math"
 	"strconv"
 	"time"
@@ -19,6 +20,7 @@ type (
 	KengConfig struct {
 		MysqlUri string
 		TsdbUri  string
+		Log      *logrus.Logger
 	}
 
 	KengService struct {
@@ -26,13 +28,15 @@ type (
 	}
 
 	KengResult struct {
-		Id          int    `json:"id"`
-		DeviceId    string `json:"device_id"`
-		Comment     string `json:"comment"`
-		Gender      int    `json:"gender"`
-		Floor       int    `json:"floor"`
-		Location    string `json:"location"`
-		IsAvailable bool   `json:"is_available"`
+		Id          int     `json:"id"`
+		DeviceId    string  `json:"device_id"`
+		Comment     string  `json:"comment"`
+		Gender      int     `json:"gender"`
+		Floor       int     `json:"floor"`
+		Location    string  `json:"location"`
+		IsAvailable bool    `json:"is_available"`
+		NobodyLine  float64 `json:"nobody_line"`
+		RRange      float64 `json:"rrange"`
 	}
 )
 
@@ -44,7 +48,9 @@ const (
 		keng.comment as comment,
         keng.gender as gender,
 		keng.floor as floor,
-        keng.location as location
+        keng.location as location,
+		pi.nobody_line as nobody_line,
+		pi.r_range as r_range
 	`
 	JOIN_TABLE = "left join pi on keng.id = pi.keng_id"
 
@@ -62,14 +68,15 @@ func (k *KengService) GetAllKeng() ([]KengResult, error) {
 	tags := make(map[string]string)
 	for index, lkr := range kr {
 		tags["device_id"] = lkr.DeviceId
-		isAvailable := k.isAvailable(tags)
+		isAvailable := k.isAvailable(tags, lkr.NobodyLine, lkr.RRange)
 		kr[index].IsAvailable = isAvailable
 	}
 	return kr, nil
 
 }
 
-func (k *KengService) isAvailable(tags map[string]string) bool {
+func (k *KengService) isAvailable(tags map[string]string, nobodyLine float64, rrange float64) bool {
+	k.Log.Info(fmt.Printf("nobodyLine ==> %f , range ==> %f", nobodyLine, rrange))
 	queryLast := client.QueryLastParam{}
 	sbq := make([]client.SubQueryLast, 0)
 	sbqq := client.SubQueryLast{
@@ -88,7 +95,7 @@ func (k *KengService) isAvailable(tags map[string]string) bool {
 			if err != nil {
 				fmt.Printf("err => %s\n", err)
 			}
-			if math.Abs(distance-NO_BODY_LINE) < RRANGE {
+			if math.Abs(distance-nobodyLine) < rrange {
 				return true
 			} else {
 				return false
@@ -137,5 +144,5 @@ func NewKengMgr(cfg *KengConfig) (KengMgr, error) {
 	}
 	MysqlConn.SingularTable(true)
 	MysqlConn.LogMode(true)
-	return &KengService{Base: Base{TsdbCli: TsdbCli, Conn: MysqlConn}}, nil
+	return &KengService{Base: Base{TsdbCli: TsdbCli, Conn: MysqlConn, Log: cfg.Log}}, nil
 }
